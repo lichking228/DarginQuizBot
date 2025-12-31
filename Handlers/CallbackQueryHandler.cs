@@ -71,7 +71,15 @@ public class CallbackQueryHandler
                 int questionId = int.Parse(parts[2]);
                 int answerId = int.Parse(parts[3]);
 
-                await _quizHandler.HandleAnswerAsync(chatId.Value, telegramId, sessionId, questionId, answerId);
+                // НОВОЕ: Передаем messageId для удаления кнопок
+                await _quizHandler.HandleAnswerAsync(
+                    chatId.Value, 
+                    telegramId, 
+                    sessionId, 
+                    questionId, 
+                    answerId,
+                    callbackQuery.Message.MessageId);
+                    
                 await _botClient.AnswerCallbackQueryAsync(callbackQuery.Id);
             }
         }

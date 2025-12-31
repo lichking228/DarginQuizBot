@@ -127,9 +127,23 @@ public class QuizHandler
             replyMarkup: keyboard);
     }
 
-    public async Task HandleAnswerAsync(long chatId, long telegramId, int sessionId, int questionId, int answerId)
+    public async Task HandleAnswerAsync(long chatId, long telegramId, int sessionId, int questionId, int answerId, int messageId)
     {
-        // 1. ПРОВЕРКА: Жива ли сессия?
+        // 1. СРАЗУ УДАЛЯЕМ КНОПКИ, чтобы нельзя было нажать повторно
+        try
+        {
+            await _botClient.EditMessageReplyMarkupAsync(
+                chatId: chatId,
+                messageId: messageId,
+                replyMarkup: null
+            );
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning($"Не удалось удалить кнопки: {ex.Message}");
+        }
+
+        // 2. ПРОВЕРКА: Жива ли сессия?
         var session = await _quizService.GetSessionByIdAsync(sessionId);
         if (session == null || session.Status == QuizStatus.Completed)
         {
