@@ -58,7 +58,10 @@ public class QuizService : IQuizService
     public async Task<bool> SubmitAnswerAsync(int quizSessionId, int questionId, int answerId, int timeSpentSeconds)
     {
         var session = await _context.QuizSessions.FindAsync(quizSessionId);
-        if (session == null) return false;
+        
+        // ВАЖНОЕ ИСПРАВЛЕНИЕ: Проверяем статус сессии
+        if (session == null || session.Status != QuizStatus.InProgress) 
+            return false;
 
         var answer = await _context.Answers
             .Include(a => a.Question)
@@ -112,6 +115,12 @@ public class QuizService : IQuizService
         return await _context.QuizSessions
             .Include(s => s.UserAnswers)
             .FirstOrDefaultAsync(s => s.UserId == userId && s.Status == QuizStatus.InProgress);
+    }
+    
+    // Добавил метод получения сессии для проверки в Handler
+    public async Task<QuizSession?> GetSessionByIdAsync(int sessionId)
+    {
+        return await _context.QuizSessions.FindAsync(sessionId);
     }
 
     public async Task<QuizSession?> CompleteQuizSessionAsync(int quizSessionId)

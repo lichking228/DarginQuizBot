@@ -129,6 +129,14 @@ public class QuizHandler
 
     public async Task HandleAnswerAsync(long chatId, long telegramId, int sessionId, int questionId, int answerId)
     {
+        // 1. ПРОВЕРКА: Жива ли сессия?
+        var session = await _quizService.GetSessionByIdAsync(sessionId);
+        if (session == null || session.Status == QuizStatus.Completed)
+        {
+            await _botClient.SendTextMessageAsync(chatId, "⚠️ Эта викторина уже завершена.");
+            return;
+        }
+
         int timeSpent = 15; 
         
         var isCorrect = await _quizService.SubmitAnswerAsync(sessionId, questionId, answerId, timeSpent);
