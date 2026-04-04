@@ -52,7 +52,6 @@ public class CallbackQueryHandler
             return;
         }
 
-        // 2. Обработка кнопок викторины
         if (data.StartsWith("category_"))
         {
             var categoryPart = data.Replace("category_", "");
@@ -71,7 +70,6 @@ public class CallbackQueryHandler
                 int questionId = int.Parse(parts[2]);
                 int answerId = int.Parse(parts[3]);
 
-                // НОВОЕ: Передаем messageId для удаления кнопок
                 await _quizHandler.HandleAnswerAsync(
                     chatId.Value, 
                     telegramId, 

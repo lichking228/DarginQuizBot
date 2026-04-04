@@ -59,7 +59,6 @@ public class QuizService : IQuizService
     {
         var session = await _context.QuizSessions.FindAsync(quizSessionId);
         
-        // ВАЖНОЕ ИСПРАВЛЕНИЕ: Проверяем статус сессии
         if (session == null || session.Status != QuizStatus.InProgress) 
             return false;
 
@@ -117,7 +116,6 @@ public class QuizService : IQuizService
             .FirstOrDefaultAsync(s => s.UserId == userId && s.Status == QuizStatus.InProgress);
     }
     
-    // Добавил метод получения сессии для проверки в Handler
     public async Task<QuizSession?> GetSessionByIdAsync(int sessionId)
     {
         return await _context.QuizSessions.FindAsync(sessionId);
