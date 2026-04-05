@@ -1,4 +1,4 @@
-﻿using DargwaQuiz.Data;
+﻿﻿using DargwaQuiz.Data;
 using DargwaQuiz.Enums;
 using DargwaQuiz.Models;
 using DargwaQuiz.Services.Interfaces;
@@ -125,6 +125,7 @@ public class QuizService : IQuizService
     {
         var session = await _context.QuizSessions
             .Include(s => s.User)
+                .ThenInclude(u => u.Achievements)
             .FirstOrDefaultAsync(s => s.Id == quizSessionId);
 
         if (session == null) return null;
@@ -136,6 +137,9 @@ public class QuizService : IQuizService
         {
             session.User.TotalScore += session.Score;
             session.User.TotalGames++;
+            session.User.QuizzesCompleted++;
+
+            await AssignAchievementsAsync(session.User);
         }
 
         await _context.SaveChangesAsync();
@@ -162,5 +166,21 @@ public class QuizService : IQuizService
                         timeSpent < 20 ? baseScore / 4 : 0;
 
         return baseScore + speedBonus;
+    }
+
+    private async Task AssignAchievementsAsync(User user)
+    {
+        var currentAchievementIds = user.Achievements
+            .Select(a => a.Id)
+            .ToHashSet();
+
+        var newAchievements = await _context.Achievements
+            .Where(a => a.RequiredScore <= user.TotalScore && !currentAchievementIds.Contains(a.Id))
+            .ToListAsync();
+
+        foreach (var achievement in newAchievements)
+        {
+            user.Achievements.Add(achievement);
+        }
     }
 }

@@ -10,6 +10,7 @@ public interface IUserService
     Task UpdateLastActiveAsync(long telegramId);
     Task<int> GetUserTotalScoreAsync(long telegramId);
     Task UpdateUserScoreAsync(long telegramId, int scoreToAdd);
+    Task<List<Achievement>> GetUnlockedAchievementsAsync(long telegramId);
     
     Task SetPreferredLanguageAsync(long telegramId, UserLanguage language);
     Task<UserLanguage> GetPreferredLanguageAsync(long telegramId);

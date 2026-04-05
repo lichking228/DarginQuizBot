@@ -1,4 +1,4 @@
-﻿using DargwaQuiz.Enums;
+﻿﻿using DargwaQuiz.Enums;
 using DargwaQuiz.Services.Interfaces;
 
 namespace DargwaQuiz.Services.Implementations;
@@ -26,15 +26,17 @@ public class LocalizationService : ILocalizationService
                                     "/start - Начать работу с ботом\n" +
                                     "/quiz - Начать викторину\n" +
                                     "/stats - Ваша статистика\n" +
+                                    "/achievements - Полученные достижения\n" +
                                     "/leaderboard - Таблица лидеров\n" +
                                     "/language - Изменить язык\n" +
                                     "/cancel - Отменить текущую викторину\n" +
                                     "/help - Показать эту справку\n\n" +
-                                    "Выберите категорию и начните изучать даргинский язык! 🎯",
+                                    "Выберите категорию и начните изуать даргинский язык! 🎯",
             [UserLanguage.Dargwa] = "📚 *Лерти командаби:*\n\n" +
                                    "/start - Ботличил хIянчи бехIбихьес\n" +
                                    "/quiz - Викторина бехIбихьес\n" +
                                    "/stats - ХIушала статистика\n" +
+                                   "/achievements - ХIушала щули ахIенси багьади\n" +
                                    "/leaderboard - Гьабкьябала сияхI\n" +
                                    "/language - Мез барсдарес\n" +
                                    "/cancel - Викторина уббяхъес\n" +
@@ -146,6 +148,18 @@ public class LocalizationService : ILocalizationService
         {
             [UserLanguage.Russian] = "🏆 Таблица лидеров пока пуста. Будьте первым!",
             [UserLanguage.Dargwa] = "🏆 Лидерталис таблица къаси хӀялра. Ца-саби бихье!"
+        },
+
+        // Достижения
+        ["achievements_title"] = new()
+        {
+            [UserLanguage.Russian] = "🏆 *Ваши открытые достижения:*",
+            [UserLanguage.Dargwa] = "🏆 *ХIушала абхьибти багьади:*"
+        },
+        ["achievements_empty"] = new()
+        {
+            [UserLanguage.Russian] = "🔒 У вас пока нет открытых достижений. Они откроются автоматически по мере прогресса.",
+            [UserLanguage.Dargwa] = "🔒 ХIела къаси абхьибти багьади агара. Илди прогрессличил цадахъ автоматикIли абхьирти сари."
         },
         
         // Язык

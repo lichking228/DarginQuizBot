@@ -1,4 +1,4 @@
-﻿using DargwaQuiz.Data;
+﻿﻿using DargwaQuiz.Data;
 using DargwaQuiz.Enums;
 using DargwaQuiz.Models;
 using DargwaQuiz.Services.Interfaces;
@@ -65,6 +65,22 @@ public class UserService : IUserService
             user.QuizzesCompleted++;
             await _context.SaveChangesAsync();
         }
+    }
+
+    public async Task<List<Achievement>> GetUnlockedAchievementsAsync(long telegramId)
+    {
+        var user = await _context.Users
+            .Include(u => u.Achievements)
+            .FirstOrDefaultAsync(u => u.TelegramId == telegramId);
+
+        if (user == null)
+        {
+            return new List<Achievement>();
+        }
+
+        return user.Achievements
+            .OrderBy(a => a.RequiredScore)
+            .ToList();
     }
 
     public async Task SetPreferredLanguageAsync(long telegramId, UserLanguage language)

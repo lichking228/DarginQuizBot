@@ -1,4 +1,4 @@
-﻿using DargwaQuiz.Models;
+﻿﻿using DargwaQuiz.Models;
 using DargwaQuiz.Enums;
 
 namespace DargwaQuiz.Data;
@@ -8,6 +8,56 @@ public static class DbInitializer
     public static void Initialize(QuizDbContext context)
     {
         context.Database.EnsureCreated();
+
+        var achievementTemplates = new List<Achievement>
+        {
+            new()
+            {
+                Name = "Первый шаг",
+                Description = "Набери 2500 очков",
+                Icon = "🥉",
+                RequiredScore = 2500
+            },
+            new()
+            {
+                Name = "Знаток",
+                Description = "Набери 7500 очков",
+                Icon = "🥈",
+                RequiredScore = 7500
+            },
+            new()
+            {
+                Name = "Мастер викторин",
+                Description = "Набери 15000 очков",
+                Icon = "🥇",
+                RequiredScore = 15000
+            },
+            new()
+            {
+                Name = "Легенда",
+                Description = "Набери 25000 очков",
+                Icon = "🏆",
+                RequiredScore = 25000
+            }
+        };
+
+        foreach (var template in achievementTemplates)
+        {
+            var existingAchievement = context.Achievements
+                .FirstOrDefault(a => a.Name == template.Name);
+
+            if (existingAchievement == null)
+            {
+                context.Achievements.Add(template);
+                continue;
+            }
+
+            existingAchievement.Description = template.Description;
+            existingAchievement.Icon = template.Icon;
+            existingAchievement.RequiredScore = template.RequiredScore;
+        }
+
+        context.SaveChanges();
 
         if (context.Categories.Any()) return;
 

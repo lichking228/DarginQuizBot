@@ -66,6 +66,10 @@ public class CommandHandler
             case "/language":
                 await HandleLanguageCommandAsync(chatId, language);
                 break;
+            case "/achievements":
+            case "/achivments":
+                await HandleAchievementsCommandAsync(message, language);
+                break;
             case "/cancel":
                 await HandleCancelCommandAsync(message, language);
                 break;
@@ -180,6 +184,27 @@ public class CommandHandler
     {
         if (message.From == null) return;
         await _quizHandler.CancelQuizAsync(message.From.Id, message.Chat.Id, lang);
+    }
+
+    private async Task HandleAchievementsCommandAsync(Message message, UserLanguage lang)
+    {
+        if (message.From == null) return;
+
+        var achievements = await _userService.GetUnlockedAchievementsAsync(message.From.Id);
+
+        if (achievements.Count == 0)
+        {
+            await _botClient.SendTextMessageAsync(message.Chat.Id, _loc.GetMessage("achievements_empty", lang));
+            return;
+        }
+
+        var text = $"{_loc.GetMessage("achievements_title", lang)}\n\n";
+        foreach (var achievement in achievements)
+        {
+            text += $"{achievement.Icon} *{achievement.Name}*\n{achievement.Description}\n\n";
+        }
+
+        await _botClient.SendTextMessageAsync(message.Chat.Id, text.TrimEnd(), parseMode: Telegram.Bot.Types.Enums.ParseMode.Markdown);
     }
 
     private async Task HandleUnknownCommandAsync(long chatId, UserLanguage lang)
