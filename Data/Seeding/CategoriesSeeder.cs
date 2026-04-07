@@ -9,9 +9,7 @@ public static class CategoriesSeeder
     {
         foreach (var categorySeed in catalog)
         {
-            var category = context.Categories
-                .FirstOrDefault(c => c.Name == categorySeed.Name);
-
+            var category = context.Categories.FirstOrDefault(c => c.Name == categorySeed.Name);
             if (category == null)
             {
                 category = new Category
@@ -43,57 +41,51 @@ public static class CategoriesSeeder
                         CategoryId = category.Id,
                         Text = questionSeed.Text,
                         Difficulty = questionSeed.Difficulty,
-                        IsActive = true
+                        IsActive = true,
+                        Answers = questionSeed.Answers.Select(a => new Answer
+                        {
+                            Text = a.Text,
+                            IsCorrect = a.IsCorrect
+                        }).ToList()
                     };
 
                     context.Questions.Add(question);
                     context.SaveChanges();
-                }
-                else
-                {
-                    question.Difficulty = questionSeed.Difficulty;
-                    question.IsActive = true;
-                    context.SaveChanges();
+                    continue;
                 }
 
-                SyncAnswersInPlace(context, question, questionSeed.Answers);
-            }
-        }
-    }
+                question.Difficulty = questionSeed.Difficulty;
+                question.IsActive = true;
 
-    private static void SyncAnswersInPlace(
-        QuizDbContext context,
-        Question question,
-        List<AnswerSeedItem> seedAnswers)
-    {
-        var existingAnswers = context.Answers
-            .Where(a => a.QuestionId == question.Id)
-            .OrderBy(a => a.OrderIndex)
-            .ToList();
-
-        for (int i = 0; i < seedAnswers.Count; i++)
-        {
-            var seed = seedAnswers[i];
-
-            if (i < existingAnswers.Count)
-            {
-                var current = existingAnswers[i];
-                current.Text = seed.Text;
-                current.IsCorrect = seed.IsCorrect;
-                current.OrderIndex = i;
-            }
-            else
-            {
-                context.Answers.Add(new Answer
+                context.Answers.RemoveRange(question.Answers);
+                question.Answers = questionSeed.Answers.Select(a => new Answer
                 {
-                    QuestionId = question.Id,
-                    Text = seed.Text,
-                    IsCorrect = seed.IsCorrect,
-                    OrderIndex = i
-                });
+                    Text = a.Text,
+                    IsCorrect = a.IsCorrect
+                }).ToList();
+
+                context.SaveChanges();
             }
+
+            var actualTexts = categorySeed.Questions
+                .Select(q => q.Text)
+                .ToHashSet();
+
+            var staleQuestions = context.Questions
+                .Where(q => q.CategoryId == category.Id && !actualTexts.Contains(q.Text) && q.IsActive)
+                .ToList();
+
+            if (staleQuestions.Count == 0)
+            {
+                continue;
+            }
+
+            foreach (var staleQuestion in staleQuestions)
+            {
+                staleQuestion.IsActive = false;
+            }
+
+            context.SaveChanges();
         }
-        
-        context.SaveChanges();
     }
 }

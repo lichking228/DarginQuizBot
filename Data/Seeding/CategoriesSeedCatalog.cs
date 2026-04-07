@@ -1,4 +1,4 @@
-﻿﻿using DargwaQuiz.Enums;
+﻿using DargwaQuiz.Enums;
 
 namespace DargwaQuiz.Data.Seeding;
 
@@ -9,120 +9,20 @@ public static class CategoriesSeedCatalog
         new CategorySeedItem
         {
             Name = "Основы",
-            NameDargwa = "Основы",
+            NameDargwa = "БехIбихьуд",
             Description = "Базовые слова",
             Questions = new()
             {
-                new QuestionSeedItem
-                {
-                    Text = "Салам",
-                    Difficulty = QuestionDifficulty.Easy,
-                    Answers = new()
-                    {
-                        new AnswerSeedItem { Text = "Привет", IsCorrect = true },
-                        new AnswerSeedItem { Text = "Пока", IsCorrect = false },
-                        new AnswerSeedItem { Text = "Идти", IsCorrect = false }
-                    }
-                },
-                new QuestionSeedItem
-                {
-                    Text = "ХIу",
-                    Difficulty = QuestionDifficulty.Easy,
-                    Answers = new()
-                    {
-                        new AnswerSeedItem { Text = "Я", IsCorrect = false },
-                        new AnswerSeedItem { Text = "Ты", IsCorrect = true },
-                        new AnswerSeedItem { Text = "Мы", IsCorrect = false }
-                    }
-                },
-                new QuestionSeedItem
-                {
-                    Text = "Ну",
-                    Difficulty = QuestionDifficulty.Easy,
-                    Answers = new()
-                    {
-                        new AnswerSeedItem { Text = "Он", IsCorrect = false },
-                        new AnswerSeedItem { Text = "Я", IsCorrect = true },
-                        new AnswerSeedItem { Text = "Они", IsCorrect = false }
-                    }
-                },
-                new QuestionSeedItem
-                {
-                    Text = "Нуша",
-                    Difficulty = QuestionDifficulty.Medium,
-                    Answers = new()
-                    {
-                        new AnswerSeedItem { Text = "Его", IsCorrect = false },
-                        new AnswerSeedItem { Text = "Их", IsCorrect = false },
-                        new AnswerSeedItem { Text = "Мы", IsCorrect = true }
-                    }
-                },
-                new QuestionSeedItem
-                {
-                    Text = "Чи?",
-                    Difficulty = QuestionDifficulty.Medium,
-                    Answers = new()
-                    {
-                        new AnswerSeedItem { Text = "Где?", IsCorrect = false },
-                        new AnswerSeedItem { Text = "Кто?", IsCorrect = true },
-                        new AnswerSeedItem { Text = "Когда?", IsCorrect = false }
-                    }
-                },
-                new QuestionSeedItem
-                {
-                    Text = "Куртти (чина?)",
-                    Difficulty = QuestionDifficulty.Hard,
-                    Answers = new()
-                    {
-                        new AnswerSeedItem { Text = "Где?", IsCorrect = true },
-                        new AnswerSeedItem { Text = "Куда?", IsCorrect = true },
-                        new AnswerSeedItem { Text = "Зачем?", IsCorrect = false }
-                    }
-                },
-                new QuestionSeedItem
-                {
-                    Text = "Гьанна",
-                    Difficulty = QuestionDifficulty.Medium,
-                    Answers = new()
-                    {
-                        new AnswerSeedItem { Text = "Потом", IsCorrect = false },
-                        new AnswerSeedItem { Text = "Сейчас", IsCorrect = true },
-                        new AnswerSeedItem { Text = "Вчера", IsCorrect = false }
-                    }
-                },
-                new QuestionSeedItem
-                {
-                    Text = "Иш",
-                    Difficulty = QuestionDifficulty.Hard,
-                    Answers = new()
-                    {
-                        new AnswerSeedItem { Text = "Тот", IsCorrect = false },
-                        new AnswerSeedItem { Text = "Этот", IsCorrect = true },
-                        new AnswerSeedItem { Text = "Весь", IsCorrect = false }
-                    }
-                },
-                new QuestionSeedItem
-                {
-                    Text = "Гье",
-                    Difficulty = QuestionDifficulty.Easy,
-                    Answers = new()
-                    {
-                        new AnswerSeedItem { Text = "Да", IsCorrect = true },
-                        new AnswerSeedItem { Text = "Нет", IsCorrect = false },
-                        new AnswerSeedItem { Text = "Может", IsCorrect = false }
-                    }
-                },
-                new QuestionSeedItem
-                {
-                    Text = "Агьари",
-                    Difficulty = QuestionDifficulty.Hard,
-                    Answers = new()
-                    {
-                        new AnswerSeedItem { Text = "Иди", IsCorrect = false },
-                        new AnswerSeedItem { Text = "Сюда", IsCorrect = false },
-                        new AnswerSeedItem { Text = "Нет", IsCorrect = true }
-                    }
-                }
+                CreateQuestion("Салам", QuestionDifficulty.Easy, ("Привет", true), ("Пока", false), ("Идти", false)),
+                CreateQuestion("ХIу", QuestionDifficulty.Easy, ("Я", false), ("Ты", true), ("Мы", false)),
+                CreateQuestion("Ну", QuestionDifficulty.Easy, ("Он", false), ("Я", true), ("Они", false)),
+                CreateQuestion("Нуша", QuestionDifficulty.Medium, ("Его", false), ("Их", false), ("Мы", true)),
+                CreateQuestion("Чи?", QuestionDifficulty.Medium, ("Где?", false), ("Кто?", true), ("Когда?", false)),
+                CreateQuestion("Куртти (чина?)", QuestionDifficulty.Hard, ("Где?", true), ("Куда?", true), ("Зачем?", false)),
+                CreateQuestion("Гьанна", QuestionDifficulty.Medium, ("Потом", false), ("Сейчас", true), ("Вчера", false)),
+                CreateQuestion("Иш", QuestionDifficulty.Hard, ("Тот", false), ("Этот", true), ("Весь", false)),
+                CreateQuestion("Гье", QuestionDifficulty.Easy, ("Да", true), ("Нет", false), ("Может", false)),
+                CreateQuestion("Агьари", QuestionDifficulty.Hard, ("Иди", false), ("Сюда", false), ("Нет", true))
             }
         },
         new CategorySeedItem
@@ -147,7 +47,7 @@ public static class CategoriesSeedCatalog
         new CategorySeedItem
         {
             Name = "Еда и посуда",
-            NameDargwa = "Беркани",
+            NameDargwa = "Беркани ва кьялти",
             Description = "Еда, напитки и кухонная утварь",
             Questions = new()
             {
@@ -179,7 +79,7 @@ public static class CategoriesSeedCatalog
                 CreateQuestion("Цулли", QuestionDifficulty.Hard, ("Сапоги", false), ("Носки", true), ("Туфли", false)),
                 CreateQuestion("ЦIатти", QuestionDifficulty.Hard, ("Шелк", false), ("Слипшийся клок шерсти", true), ("Хлопок", false)),
                 CreateQuestion("Кьяшпалтар", QuestionDifficulty.Medium, ("Обувь", true), ("Перчатки", false), ("Шляпа", false)),
-                CreateQuestion("Валчагъ", QuestionDifficulty.Hard, ("Сапоги", false), ("Мужская верхняя оежда", true), ("Рубаха", false))
+                CreateQuestion("Валчагъ", QuestionDifficulty.Hard, ("Сапоги", false), ("Мужская верхняя одежда", true), ("Рубаха", false))
             }
         },
         new CategorySeedItem
@@ -204,7 +104,7 @@ public static class CategoriesSeedCatalog
         new CategorySeedItem
         {
             Name = "Сельское хозяйство и инструменты",
-            NameDargwa = "Сельское хозяйство и инструменты",
+            NameDargwa = "Шишла майишат",
             Description = "Термины, связанные с хозяйством",
             Questions = new()
             {
@@ -223,7 +123,7 @@ public static class CategoriesSeedCatalog
         new CategorySeedItem
         {
             Name = "Дом и постройки",
-            NameDargwa = "Дом и постройки",
+            NameDargwa = "Хъали ва гIяшлар",
             Description = "Слова о доме и строениях",
             Questions = new()
             {
@@ -242,7 +142,7 @@ public static class CategoriesSeedCatalog
         new CategorySeedItem
         {
             Name = "Растения и плоды",
-            NameDargwa = "Растения и плоды",
+            NameDargwa = "ГIяшлар ва кьар",
             Description = "Растения, плоды и материалы",
             Questions = new()
             {
@@ -261,7 +161,7 @@ public static class CategoriesSeedCatalog
         new CategorySeedItem
         {
             Name = "Люди и качества",
-            NameDargwa = "Люди и качества",
+            NameDargwa = "Адамти ва къалип",
             Description = "Люди, роли и личные качества",
             Questions = new()
             {
@@ -280,7 +180,7 @@ public static class CategoriesSeedCatalog
         new CategorySeedItem
         {
             Name = "Разное и абстрактное",
-            NameDargwa = "Разное и абстрактное",
+            NameDargwa = "Жура-журала",
             Description = "Абстрактные и общие понятия",
             Questions = new()
             {
