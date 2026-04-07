@@ -1,4 +1,4 @@
-﻿﻿using DargwaQuiz.Enums;
+﻿using DargwaQuiz.Enums;
 using DargwaQuiz.Services.Interfaces;
 
 namespace DargwaQuiz.Services.Implementations;
@@ -11,12 +11,12 @@ public class LocalizationService : ILocalizationService
         ["welcome_new"] = new()
         {
             [UserLanguage.Russian] = "👋 Привет, {0}!\n\nДобро пожаловать в DargwaQuiz - бот для изучения даргинского языка!\n\nИспользуйте /help чтобы увидеть доступные команды.",
-            [UserLanguage.Dargwa] = "Салам, {0}!\n\nХашкелди  DargwaQuiz-личи — дарган мез руркъес багьандан бот!\n\nПайдалабарая /help, лерти командаби чеэс багьандан."
+            [UserLanguage.Dargwa] = "👋 Салам, {0}!\n\nDargwaQuiz-личи хашгелди — дарган мез руркъян бот! 🎯\n\nПайдалабарая /help, лерти командаби чеэс багьандан."
         },
         ["welcome_back"] = new()
         {
             [UserLanguage.Russian] = "С возвращением, {0}! 🎉\n\nГотовы продолжить обучение? Используйте /quiz для начала викторины.",
-            [UserLanguage.Dargwa] = "Зизи, {0}! 🎉\n\nРуркъни даимбирес хIядурлирив? Пайдалабарая /quiz викторина бехIбихьес багьандан."
+            [UserLanguage.Dargwa] = "ГIуррара салам, {0}! 🎉\n\nДаимбарис хIядурлирив? Викторина бехIбихьес /quiz пайдалабарая."
         },
         
         // Помощь
@@ -31,24 +31,24 @@ public class LocalizationService : ILocalizationService
                                     "/language - Изменить язык\n" +
                                     "/cancel - Отменить текущую викторину\n" +
                                     "/help - Показать эту справку\n\n" +
-                                    "Выберите категорию и начните изуать даргинский язык! 🎯",
+                                    "Выберите категорию и начните изучать даргинский язык! 🎯",
             [UserLanguage.Dargwa] = "📚 *Лерти командаби:*\n\n" +
                                    "/start - Ботличил хIянчи бехIбихьес\n" +
                                    "/quiz - Викторина бехIбихьес\n" +
-                                   "/stats - ХIушала статистика\n" +
-                                   "/achievements - ХIушала щули ахIенси багьади\n" +
+                                   "/stats - ХIела статистика\n" +
+                                   "/achievements - Сари абхьибти багьади\n" +
                                    "/leaderboard - Гьабкьябала сияхI\n" +
                                    "/language - Мез барсдарес\n" +
                                    "/cancel - Викторина уббяхъес\n" +
                                    "/help - Иш справка чебаахъес\n\n" +
-                                   "Гьагъниси категория чеббикIая ва дарган мез руркъес бехIбихьяя! 🎯"
+                                   "Категория чеббикIая ва дарган мез руркъес бехIбихьяя! 🎯"
         },
         
         // Статистика
         ["stats_header"] = new()
         {
             [UserLanguage.Russian] = "📊 *Ваша статистика:*",
-            [UserLanguage.Dargwa] = "📊 *ХIушала статистика:*"
+            [UserLanguage.Dargwa] = "📊 *ХIела статистика:*"
         },
         ["stats_username"] = new()
         {
@@ -58,27 +58,27 @@ public class LocalizationService : ILocalizationService
         ["stats_total_score"] = new()
         {
             [UserLanguage.Russian] = "🏆 Общий счет: {0}",
-            [UserLanguage.Dargwa] = "🏆 АрагIебси кьадар: {0}"
+            [UserLanguage.Dargwa] = "🏆 Лерилра очкоти: {0}"
         },
         ["stats_quizzes"] = new()
         {
             [UserLanguage.Russian] = "✅ Завершено викторин: {0}",
-            [UserLanguage.Dargwa] = "✅ Викторина таманси саби: {0}"
+            [UserLanguage.Dargwa] = "✅ Таманбиубти викторинаби: {0}"
         },
         ["stats_average"] = new()
         {
             [UserLanguage.Russian] = "📈 Средний счет: {0:F2}",
-            [UserLanguage.Dargwa] = "📈 Урга кьадар: {0:F2}"
+            [UserLanguage.Dargwa] = "📈 Урга-балкI: {0:F2}"
         },
         ["stats_total_answers"] = new()
         {
             [UserLanguage.Russian] = "❓ Всего ответов: {0}",
-            [UserLanguage.Dargwa] = "❓ Лерилра жавабти кьадар: {0}"
+            [UserLanguage.Dargwa] = "❓ Лерилра жавабти: {0}"
         },
         ["stats_correct"] = new()
         {
             [UserLanguage.Russian] = "✔️ Правильных ответов: {0}",
-            [UserLanguage.Dargwa] = "✔️ Хьулра жаваб: {0}"
+            [UserLanguage.Dargwa] = "✔️ Бархьти жавабти: {0}"
         },
         ["stats_accuracy"] = new()
         {
@@ -90,12 +90,12 @@ public class LocalizationService : ILocalizationService
         ["select_category"] = new()
         {
             [UserLanguage.Russian] = "📚 Выберите категорию для викторины:",
-            [UserLanguage.Dargwa] = "📚 ГIягIниси категория чеббикIая викторина багьандан:"
+            [UserLanguage.Dargwa] = "📚 Викторина багьандан категория чеббикIая:"
         },
         ["all_categories"] = new()
         {
             [UserLanguage.Russian] = "🎲 Все категории",
-            [UserLanguage.Dargwa] = "🎲 Лебилра категораби"
+            [UserLanguage.Dargwa] = "🎲 Лерилра категорияби"
         },
         ["question"] = new()
         {
@@ -105,17 +105,17 @@ public class LocalizationService : ILocalizationService
         ["quiz_completed"] = new()
         {
             [UserLanguage.Russian] = "🎉 *Викторина завершена!*",
-            [UserLanguage.Dargwa] = "🎉 *Викторина таманси саби!*"
+            [UserLanguage.Dargwa] = "🎉 *Викторина таманбиуб!*"
         },
         ["results"] = new()
         {
             [UserLanguage.Russian] = "📊 Результаты:",
-            [UserLanguage.Dargwa] = "📊 ХIясил:"
+            [UserLanguage.Dargwa] = "📊 ХIясилти:"
         },
         ["correct_answers"] = new()
         {
             [UserLanguage.Russian] = "✅ Правильных ответов: {0}/{1}",
-            [UserLanguage.Dargwa] = "✅ Бархьси жавабти кьадар: {0}/{1}"
+            [UserLanguage.Dargwa] = "✅ Бархьти жавабти: {0}/{1}"
         },
         ["accuracy"] = new()
         {
@@ -125,7 +125,7 @@ public class LocalizationService : ILocalizationService
         ["score"] = new()
         {
             [UserLanguage.Russian] = "🏆 Набрано очков: {0}",
-            [UserLanguage.Dargwa] = "🏆 Очкоти кьадар: {0}"
+            [UserLanguage.Dargwa] = "🏆 Касибти очкоти: {0}"
         },
         ["time"] = new()
         {
@@ -142,24 +142,24 @@ public class LocalizationService : ILocalizationService
         ["leaderboard_title"] = new()
         {
             [UserLanguage.Russian] = "🏆 *Топ-10 игроков:*",
-            [UserLanguage.Dargwa] = "🏆 *10 бяркьала ахӏти:*"
+            [UserLanguage.Dargwa] = "🏆 *Топ-10 гьалабяхIти:* "
         },
         ["leaderboard_empty"] = new()
         {
             [UserLanguage.Russian] = "🏆 Таблица лидеров пока пуста. Будьте первым!",
-            [UserLanguage.Dargwa] = "🏆 Лидерталис таблица къаси хӀялра. Ца-саби бихье!"
+            [UserLanguage.Dargwa] = "🏆 ГьалабяхIтала сияхI къаси саби. ХIу цаиби визи!"
         },
 
         // Достижения
         ["achievements_title"] = new()
         {
             [UserLanguage.Russian] = "🏆 *Ваши открытые достижения:*",
-            [UserLanguage.Dargwa] = "🏆 *ХIушала абхьибти багьади:*"
+            [UserLanguage.Dargwa] = "🏆 *ХIела абхьибти багьади:*"
         },
         ["achievements_empty"] = new()
         {
             [UserLanguage.Russian] = "🔒 У вас пока нет открытых достижений. Они откроются автоматически по мере прогресса.",
-            [UserLanguage.Dargwa] = "🔒 ХIела къаси абхьибти багьади агара. Илди прогрессличил цадахъ автоматикIли абхьирти сари."
+            [UserLanguage.Dargwa] = "🔒 ХIела абхьибти багьади агара. Илди хIела прогрессличил цадахъ автоматикIли абхьирти сари."
         },
         
         // Язык
@@ -189,7 +189,7 @@ public class LocalizationService : ILocalizationService
             [UserLanguage.Dargwa] = "✅ Мез дарган мезличи барсбиуб"
         },
 
-        // Ошибки
+        // Ошибки (Без изменений по просьбе пользователя)
         ["error_not_registered"] = new()
         {
             [UserLanguage.Russian] = "❌ Сначала используйте команду /start для регистрации.",
@@ -213,19 +213,19 @@ public class LocalizationService : ILocalizationService
         ["quiz_cancelled"] = new()
         {
             [UserLanguage.Russian] = "✅ Викторина отменена. Начните новую с помощью /quiz",
-            [UserLanguage.Dargwa] = "✅ Викторина уббяхъили саби. Сагал баркьес багьандан /quiz\" бузахъен,"
+            [UserLanguage.Dargwa] = "✅ Викторина уббяхъili саби. Сагал баркьес багьандан /quiz\" бузахъен,"
         },
         
         // Правильно/Неправильно
         ["answer_correct"] = new()
         {
             [UserLanguage.Russian] = "✅ Правильно!",
-            [UserLanguage.Dargwa] = "✅ Бархьси саби!!"
+            [UserLanguage.Dargwa] = "✅ Бархьси саби!"
         },
         ["answer_wrong"] = new()
         {
             [UserLanguage.Russian] = "❌ Неправильно. Правильный ответ: {0}",
-            [UserLanguage.Dargwa] = "❌ БалкIли саби. Бархьси жаваб:: {0}"
+            [UserLanguage.Dargwa] = "❌ БалкIли саби. Бархьси жаваб: {0}"
         }
     };
 
