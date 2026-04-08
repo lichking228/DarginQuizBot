@@ -9,6 +9,7 @@ public interface IQuizService
     Task<bool> SubmitAnswerAsync(int quizSessionId, int questionId, int answerId, int timeSpentSeconds);
     Task<string> GetCorrectAnswerTextAsync(int questionId);
     Task<QuizSession?> GetActiveQuizSessionAsync(int userId);
+    Task<int> CancelActiveQuizSessionsAsync(int userId);
     Task<QuizSession?> GetSessionByIdAsync(int sessionId);
     Task<QuizSession?> CompleteQuizSessionAsync(int quizSessionId);
     Task<List<Category>> GetAllCategoriesAsync();

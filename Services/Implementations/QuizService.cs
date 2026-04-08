@@ -1,4 +1,4 @@
-﻿﻿using DargwaQuiz.Data;
+﻿using DargwaQuiz.Data;
 using DargwaQuiz.Enums;
 using DargwaQuiz.Models;
 using DargwaQuiz.Services.Interfaces;
@@ -58,8 +58,8 @@ public class QuizService : IQuizService
     public async Task<bool> SubmitAnswerAsync(int quizSessionId, int questionId, int answerId, int timeSpentSeconds)
     {
         var session = await _context.QuizSessions.FindAsync(quizSessionId);
-        
-        if (session == null || session.Status != QuizStatus.InProgress) 
+
+        if (session == null || session.Status != QuizStatus.InProgress)
             return false;
 
         var answer = await _context.Answers
@@ -105,7 +105,7 @@ public class QuizService : IQuizService
             .Where(a => a.QuestionId == questionId && a.IsCorrect)
             .Select(a => a.Text)
             .FirstOrDefaultAsync();
-        
+
         return text ?? "Неизвестно";
     }
 
@@ -113,9 +113,31 @@ public class QuizService : IQuizService
     {
         return await _context.QuizSessions
             .Include(s => s.UserAnswers)
-            .FirstOrDefaultAsync(s => s.UserId == userId && s.Status == QuizStatus.InProgress);
+            .Where(s => s.UserId == userId && s.Status == QuizStatus.InProgress)
+            .OrderByDescending(s => s.StartedAt)
+            .FirstOrDefaultAsync();
     }
-    
+
+    public async Task<int> CancelActiveQuizSessionsAsync(int userId)
+    {
+        var activeSessions = await _context.QuizSessions
+            .Where(s => s.UserId == userId && s.Status == QuizStatus.InProgress)
+            .ToListAsync();
+
+        if (activeSessions.Count == 0)
+            return 0;
+
+        var cancelledAt = DateTime.UtcNow;
+        foreach (var session in activeSessions)
+        {
+            session.Status = QuizStatus.Abandoned;
+            session.CompletedAt = cancelledAt;
+        }
+
+        await _context.SaveChangesAsync();
+        return activeSessions.Count;
+    }
+
     public async Task<QuizSession?> GetSessionByIdAsync(int sessionId)
     {
         return await _context.QuizSessions.FindAsync(sessionId);
@@ -125,7 +147,7 @@ public class QuizService : IQuizService
     {
         var session = await _context.QuizSessions
             .Include(s => s.User)
-                .ThenInclude(u => u.Achievements)
+            .ThenInclude(u => u.Achievements)
             .FirstOrDefaultAsync(s => s.Id == quizSessionId);
 
         if (session == null) return null;
@@ -154,7 +176,7 @@ public class QuizService : IQuizService
 
     private int CalculateScore(QuestionDifficulty difficulty, int timeSpent)
     {
-        int baseScore = difficulty switch
+        var baseScore = difficulty switch
         {
             QuestionDifficulty.Easy => 10,
             QuestionDifficulty.Medium => 20,
@@ -162,8 +184,8 @@ public class QuizService : IQuizService
             _ => 10
         };
 
-        int speedBonus = timeSpent < 10 ? baseScore / 2 : 
-                        timeSpent < 20 ? baseScore / 4 : 0;
+        var speedBonus = timeSpent < 10 ? baseScore / 2 :
+            timeSpent < 20 ? baseScore / 4 : 0;
 
         return baseScore + speedBonus;
     }

@@ -1,5 +1,4 @@
-﻿﻿using DargwaQuiz.DTOs;
-using DargwaQuiz.Enums;
+﻿using DargwaQuiz.Enums;
 using DargwaQuiz.Services.Interfaces;
 using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -48,29 +47,26 @@ public class QuizHandler
         }
 
         var categories = await _quizService.GetAllCategoriesAsync();
-        
         var keyboardButtons = new List<IEnumerable<InlineKeyboardButton>>();
-        
+
         foreach (var category in categories)
         {
-            var catName = (lang == UserLanguage.Dargwa && !string.IsNullOrEmpty(category.NameDargwa)) 
-                ? category.NameDargwa 
+            var catName = lang == UserLanguage.Dargwa && !string.IsNullOrEmpty(category.NameDargwa)
+                ? category.NameDargwa
                 : category.Name;
 
-            keyboardButtons.Add(new[] 
-            { 
-                InlineKeyboardButton.WithCallbackData(catName, $"category_{category.Id}") 
-            });
+            keyboardButtons.Add(new[] { InlineKeyboardButton.WithCallbackData(catName, $"category_{category.Id}") });
         }
 
-        keyboardButtons.Add(new[] 
-        { 
-            InlineKeyboardButton.WithCallbackData(_loc.GetMessage("all_categories", lang), "category_all") 
+        keyboardButtons.Add(new[]
+        {
+            InlineKeyboardButton.WithCallbackData(_loc.GetMessage("all_categories", lang), "category_all")
         });
 
         var keyboard = new InlineKeyboardMarkup(keyboardButtons);
 
-        await _botClient.SendTextMessageAsync(chatId,
+        await _botClient.SendTextMessageAsync(
+            chatId,
             _loc.GetMessage("select_category", lang),
             replyMarkup: keyboard);
     }
@@ -78,9 +74,17 @@ public class QuizHandler
     public async Task CreateQuizAndSendFirstQuestionAsync(long chatId, long telegramId, int? categoryId)
     {
         var user = await _userService.GetUserByTelegramIdAsync(telegramId);
-        if (user == null) return;
-        
+        if (user == null)
+            return;
+
         var lang = user.PreferredLanguage;
+
+        var activeQuiz = await _quizService.GetActiveQuizSessionAsync(user.Id);
+        if (activeQuiz != null)
+        {
+            await SendNextQuestionAsync(activeQuiz.Id, chatId, lang);
+            return;
+        }
 
         var session = await _quizService.CreateQuizSessionAsync(user.Id, categoryId, 10);
         await SendNextQuestionAsync(session.Id, chatId, lang);
@@ -97,51 +101,45 @@ public class QuizHandler
         }
 
         var questionHeader = _loc.GetMessage("question", lang);
-        
-        var questionBody = (lang == UserLanguage.Dargwa && !string.IsNullOrEmpty(question.TextDargwa))
+        var questionBody = lang == UserLanguage.Dargwa && !string.IsNullOrEmpty(question.TextDargwa)
             ? question.TextDargwa
             : question.Text;
 
         var text = $"{questionHeader}\n\n{questionBody}";
 
         var answerButtons = new List<IEnumerable<InlineKeyboardButton>>();
-        
+
         foreach (var answer in question.Answers)
         {
-            var answerText = answer.Text;
-
             answerButtons.Add(new[]
             {
-                InlineKeyboardButton.WithCallbackData(
-                    answerText, 
-                    $"answer_{quizSessionId}_{question.Id}_{answer.Id}")
+                InlineKeyboardButton.WithCallbackData(answer.Text, $"answer_{quizSessionId}_{question.Id}_{answer.Id}")
             });
         }
 
         var keyboard = new InlineKeyboardMarkup(answerButtons);
 
-        await _botClient.SendTextMessageAsync(chatId, text,
+        await _botClient.SendTextMessageAsync(
+            chatId,
+            text,
             parseMode: Telegram.Bot.Types.Enums.ParseMode.Markdown,
             replyMarkup: keyboard);
     }
 
     public async Task HandleAnswerAsync(long chatId, long telegramId, int sessionId, int questionId, int answerId, int messageId)
     {
-        // 1. СРАЗУ УДАЛЯЕМ КНОПКИ, чтобы нельзя было нажать повторно
         try
         {
             await _botClient.EditMessageReplyMarkupAsync(
                 chatId: chatId,
                 messageId: messageId,
-                replyMarkup: null
-            );
+                replyMarkup: null);
         }
         catch (Exception ex)
         {
-            _logger.LogWarning($"Не удалось удалить кнопки: {ex.Message}");
+            _logger.LogWarning("Не удалось удалить кнопки: {Message}", ex.Message);
         }
 
-        // 2. ПРОВЕРКА: Жива ли сессия?
         var session = await _quizService.GetSessionByIdAsync(sessionId);
         if (session == null || session.Status == QuizStatus.Completed)
         {
@@ -149,10 +147,9 @@ public class QuizHandler
             return;
         }
 
-        int timeSpent = 15; 
-        
+        const int timeSpent = 15;
         var isCorrect = await _quizService.SubmitAnswerAsync(sessionId, questionId, answerId, timeSpent);
-        
+
         var user = await _userService.GetUserByTelegramIdAsync(telegramId);
         var lang = user?.PreferredLanguage ?? UserLanguage.Russian;
 
@@ -163,8 +160,7 @@ public class QuizHandler
         else
         {
             var correctText = await _quizService.GetCorrectAnswerTextAsync(questionId);
-            await _botClient.SendTextMessageAsync(chatId, 
-                string.Format(_loc.GetMessage("answer_wrong", lang), correctText));
+            await _botClient.SendTextMessageAsync(chatId, string.Format(_loc.GetMessage("answer_wrong", lang), correctText));
         }
 
         await Task.Delay(1000);
@@ -174,35 +170,39 @@ public class QuizHandler
     private async Task CompleteQuizAsync(int quizSessionId, long chatId, UserLanguage lang)
     {
         var session = await _quizService.CompleteQuizSessionAsync(quizSessionId);
-        if (session == null) return;
+        if (session == null)
+            return;
 
         var result = await _statisticsService.GetQuizResultAsync(quizSessionId);
 
-        var resultText = $"{_loc.GetMessage("quiz_completed", lang)}\n\n" +
-                        $"{_loc.GetMessage("results", lang)}\n" +
-                        $"{string.Format(_loc.GetMessage("correct_answers", lang), result.CorrectAnswers, result.TotalQuestions)}\n" +
-                        $"{string.Format(_loc.GetMessage("accuracy", lang), result.AccuracyPercentage)}\n" +
-                        $"{string.Format(_loc.GetMessage("score", lang), result.Score)}\n" +
-                        $"{string.Format(_loc.GetMessage("time", lang), result.Duration.ToString("mm\\:ss"))}\n\n" +
-                        $"{_loc.GetMessage("try_again", lang)}";
+        var resultText =
+            $"{_loc.GetMessage("quiz_completed", lang)}\n\n" +
+            $"{_loc.GetMessage("results", lang)}\n" +
+            $"{string.Format(_loc.GetMessage("correct_answers", lang), result.CorrectAnswers, result.TotalQuestions)}\n" +
+            $"{string.Format(_loc.GetMessage("accuracy", lang), result.AccuracyPercentage)}\n" +
+            $"{string.Format(_loc.GetMessage("score", lang), result.Score)}\n" +
+            $"{string.Format(_loc.GetMessage("time", lang), result.Duration.ToString("mm\\:ss"))}\n\n" +
+            $"{_loc.GetMessage("try_again", lang)}";
 
-        await _botClient.SendTextMessageAsync(chatId, resultText,
+        await _botClient.SendTextMessageAsync(
+            chatId,
+            resultText,
             parseMode: Telegram.Bot.Types.Enums.ParseMode.Markdown);
     }
 
     public async Task CancelQuizAsync(long telegramId, long chatId, UserLanguage lang)
     {
         var user = await _userService.GetUserByTelegramIdAsync(telegramId);
-        if (user == null) return;
+        if (user == null)
+            return;
 
-        var activeQuiz = await _quizService.GetActiveQuizSessionAsync(user.Id);
-        if (activeQuiz == null)
+        var cancelledCount = await _quizService.CancelActiveQuizSessionsAsync(user.Id);
+        if (cancelledCount == 0)
         {
             await _botClient.SendTextMessageAsync(chatId, _loc.GetMessage("error_no_active_quiz", lang));
             return;
         }
 
-        await _quizService.CompleteQuizSessionAsync(activeQuiz.Id);
         await _botClient.SendTextMessageAsync(chatId, _loc.GetMessage("quiz_cancelled", lang));
     }
 }

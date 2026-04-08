@@ -11,7 +11,6 @@ public class CallbackQueryHandler
     private readonly IUserService _userService;
     private readonly ILocalizationService _loc;
     private readonly QuizHandler _quizHandler;
-    private readonly ILogger<CallbackQueryHandler> _logger;
 
     public CallbackQueryHandler(
         ITelegramBotClient botClient,
@@ -24,22 +23,22 @@ public class CallbackQueryHandler
         _userService = userService;
         _loc = loc;
         _quizHandler = quizHandler;
-        _logger = logger;
     }
 
     public async Task HandleCallbackAsync(CallbackQuery callbackQuery)
     {
         var data = callbackQuery.Data;
         var telegramId = callbackQuery.From.Id;
-        var chatId = callbackQuery.Message?.Chat.Id;
+        var message = callbackQuery.Message;
+        var chatId = message?.Chat.Id;
 
-        if (data == null || chatId == null) return;
+        if (data == null || chatId == null)
+            return;
 
-        // 1. Обработка смены языка
         if (data == "lang_ru" || data == "lang_drg")
         {
             var newLang = data == "lang_ru" ? UserLanguage.Russian : UserLanguage.Dargwa;
-            
+
             await _userService.SetPreferredLanguageAsync(telegramId, newLang);
 
             var text = newLang == UserLanguage.Russian
@@ -47,7 +46,6 @@ public class CallbackQueryHandler
                 : _loc.GetMessage("language_changed_dargwa", newLang);
 
             await _botClient.AnswerCallbackQueryAsync(callbackQuery.Id, text);
-            
             await _botClient.SendTextMessageAsync(chatId.Value, text);
             return;
         }
@@ -58,28 +56,32 @@ public class CallbackQueryHandler
             int? categoryId = categoryPart == "all" ? null : int.Parse(categoryPart);
 
             await _botClient.AnswerCallbackQueryAsync(callbackQuery.Id);
-            await _quizHandler.CreateQuizAndSendFirstQuestionAsync((int)chatId.Value, telegramId, categoryId); 
+            await _quizHandler.CreateQuizAndSendFirstQuestionAsync(chatId.Value, telegramId, categoryId);
+            return;
         }
-        else if (data.StartsWith("answer_"))
-        {
-            // Формат: answer_{sessionId}_{questionId}_{answerId}
-            var parts = data.Split('_');
-            if (parts.Length == 4)
-            {
-                int sessionId = int.Parse(parts[1]);
-                int questionId = int.Parse(parts[2]);
-                int answerId = int.Parse(parts[3]);
 
-                await _quizHandler.HandleAnswerAsync(
-                    chatId.Value, 
-                    telegramId, 
-                    sessionId, 
-                    questionId, 
-                    answerId,
-                    callbackQuery.Message.MessageId);
-                    
-                await _botClient.AnswerCallbackQueryAsync(callbackQuery.Id);
-            }
+        if (data.StartsWith("answer_"))
+        {
+            if (message == null)
+                return;
+
+            var parts = data.Split('_');
+            if (parts.Length != 4)
+                return;
+
+            var sessionId = int.Parse(parts[1]);
+            var questionId = int.Parse(parts[2]);
+            var answerId = int.Parse(parts[3]);
+
+            await _quizHandler.HandleAnswerAsync(
+                chatId.Value,
+                telegramId,
+                sessionId,
+                questionId,
+                answerId,
+                message.MessageId);
+
+            await _botClient.AnswerCallbackQueryAsync(callbackQuery.Id);
         }
     }
 }
