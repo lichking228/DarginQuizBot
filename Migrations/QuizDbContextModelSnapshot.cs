@@ -147,10 +147,7 @@ namespace DargwaQuiz.Migrations
 
                     b.Property<int>("Difficulty")
                         .HasColumnType("integer");
-
-                    b.Property<string>("Explanation")
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
+                    
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -160,10 +157,7 @@ namespace DargwaQuiz.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
-                    b.Property<string>("TextDargwa")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
+                    
                     b.Property<int>("TimesAnsweredCorrectly")
                         .HasColumnType("integer");
 
