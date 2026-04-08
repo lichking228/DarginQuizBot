@@ -83,10 +83,7 @@ namespace DargwaQuiz.Migrations
 
                     b.Property<bool>("IsCorrect")
                         .HasColumnType("boolean");
-
-                    b.Property<int>("OrderIndex")
-                        .HasColumnType("integer");
-
+                    
                     b.Property<int>("QuestionId")
                         .HasColumnType("integer");
 
@@ -94,11 +91,7 @@ namespace DargwaQuiz.Migrations
                         .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
-
-                    b.Property<string>("TextDargwa")
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
-
+                    
                     b.HasKey("Id");
 
                     b.HasIndex("QuestionId");

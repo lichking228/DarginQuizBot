@@ -1,4 +1,4 @@
-﻿using DargwaQuiz.DTOs;
+﻿﻿using DargwaQuiz.DTOs;
 using DargwaQuiz.Enums;
 using DargwaQuiz.Services.Interfaces;
 using Telegram.Bot;
@@ -108,9 +108,7 @@ public class QuizHandler
         
         foreach (var answer in question.Answers)
         {
-            var answerText = (lang == UserLanguage.Dargwa && !string.IsNullOrEmpty(answer.TextDargwa))
-                ? answer.TextDargwa
-                : answer.Text;
+            var answerText = answer.Text;
 
             answerButtons.Add(new[]
             {

@@ -38,6 +38,7 @@
         <Folder Include="Middleware\" />
         <Folder Include="Extensions\" />
         <Folder Include="logs\" />
+        <Folder Include="Migrations\Migrations\" />
     </ItemGroup>
 
 </Project>
