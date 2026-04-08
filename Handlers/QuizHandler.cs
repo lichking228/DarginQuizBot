@@ -1,4 +1,4 @@
-﻿using DargwaQuiz.Enums;
+﻿﻿using DargwaQuiz.Enums;
 using DargwaQuiz.Services.Interfaces;
 using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -101,9 +101,7 @@ public class QuizHandler
         }
 
         var questionHeader = _loc.GetMessage("question", lang);
-        var questionBody = lang == UserLanguage.Dargwa && !string.IsNullOrEmpty(question.TextDargwa)
-            ? question.TextDargwa
-            : question.Text;
+        var questionBody = question.Text;
 
         var text = $"{questionHeader}\n\n{questionBody}";
 

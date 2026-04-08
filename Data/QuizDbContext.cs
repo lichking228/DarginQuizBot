@@ -1,4 +1,4 @@
-﻿﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using DargwaQuiz.Models;
 
 namespace DargwaQuiz.Data;
@@ -47,8 +47,6 @@ public class QuizDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Text).HasMaxLength(500).IsRequired();
-            entity.Property(e => e.TextDargwa).HasMaxLength(500);
-            entity.Property(e => e.Explanation).HasMaxLength(1000);
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("NOW()");
             
             // Связь с Category
