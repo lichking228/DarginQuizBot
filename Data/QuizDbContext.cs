@@ -61,6 +61,7 @@ public class QuizDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Text).HasMaxLength(300).IsRequired();
+            entity.Property(e => e.OrderIndex).IsRequired();
             
             // Связь с Question
             entity.HasOne(e => e.Question)

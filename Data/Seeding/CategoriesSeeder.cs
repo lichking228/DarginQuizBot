@@ -42,10 +42,11 @@ public static class CategoriesSeeder
                         Text = questionSeed.Text,
                         Difficulty = questionSeed.Difficulty,
                         IsActive = true,
-                        Answers = questionSeed.Answers.Select(a => new Answer
+                        Answers = questionSeed.Answers.Select((a, index) => new Answer
                         {
                             Text = a.Text,
-                            IsCorrect = a.IsCorrect
+                            IsCorrect = a.IsCorrect,
+                            OrderIndex = index
                         }).ToList()
                     };
 
@@ -58,10 +59,11 @@ public static class CategoriesSeeder
                 question.IsActive = true;
 
                 context.Answers.RemoveRange(question.Answers);
-                question.Answers = questionSeed.Answers.Select(a => new Answer
+                question.Answers = questionSeed.Answers.Select((a, index) => new Answer
                 {
                     Text = a.Text,
-                    IsCorrect = a.IsCorrect
+                    IsCorrect = a.IsCorrect,
+                    OrderIndex = index
                 }).ToList();
 
                 context.SaveChanges();

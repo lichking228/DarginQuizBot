@@ -189,7 +189,6 @@ public class LocalizationService : ILocalizationService
             [UserLanguage.Dargwa] = "✅ Мез дарган мезличи барсбиуб"
         },
 
-        // Ошибки (Без изменений по просьбе пользователя)
         ["error_not_registered"] = new()
         {
             [UserLanguage.Russian] = "❌ Сначала используйте команду /start для регистрации.",
@@ -216,7 +215,6 @@ public class LocalizationService : ILocalizationService
             [UserLanguage.Dargwa] = "✅ Викторина уббяхъili саби. Сагал баркьес багьандан /quiz\" бузахъен,"
         },
         
-        // Правильно/Неправильно
         ["answer_correct"] = new()
         {
             [UserLanguage.Russian] = "✅ Правильно!",

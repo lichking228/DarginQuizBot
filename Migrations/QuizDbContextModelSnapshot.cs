@@ -82,6 +82,9 @@ namespace DargwaQuiz.Migrations
 
                     b.Property<bool>("IsCorrect")
                         .HasColumnType("boolean");
+
+                    b.Property<int>("OrderIndex")
+                        .HasColumnType("integer");
                     
                     b.Property<int>("QuestionId")
                         .HasColumnType("integer");
